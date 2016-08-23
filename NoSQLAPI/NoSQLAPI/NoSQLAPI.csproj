@@ -130,7 +130,6 @@
     <Compile Include="Controllers\DocumentDbController.cs" />
     <Compile Include="Controllers\RedisController.cs" />
     <Compile Include="Controllers\TableController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
