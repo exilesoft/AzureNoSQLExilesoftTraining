@@ -23,24 +23,31 @@ namespace NoSQLAPI.Controllers
         }
 
         [HttpPost, Route("student/create")]
-        public IHttpActionResult CreateMember(Student member)
+        public IHttpActionResult CreateMember(StudentDto studentDto)
         {
             var memberTable = _tableClient.GetTableReference("student");
 
-            var insertOperation = TableOperation.Insert(member);
+            var student = new Student
+            {
+                RegistrationNumber = studentDto.RegistrationNumber,
+                Email = studentDto.Email,
+                Name = studentDto.Name
+            };
+
+            var insertOperation = TableOperation.Insert(student);
 
             memberTable.CreateIfNotExists();
             memberTable.Execute(insertOperation);
 
-            return Ok(member.UniqueIdentifier);
+            return Ok();
         }
 
-        [HttpGet, Route("member/{registrationNumber")]
+        [HttpGet, Route("member/{registrationNumber}")]
         public IHttpActionResult GetMember(string registrationNumber)
         {
             var memberTable = _tableClient.GetTableReference("student");
 
-            var partionKey = registrationNumber.ToLower().Split('/')[0];
+            var partionKey = registrationNumber.ToLower().Split('-')[0];
 
             var record = from student in memberTable.CreateQuery<Student>()
                          where student.PartitionKey == partionKey && student.RegistrationNumber == registrationNumber
@@ -65,7 +72,7 @@ namespace NoSQLAPI.Controllers
             }
             set
             {
-                PartitionKey = value.ToLower().Split('/')[0];
+                PartitionKey = value.ToLower().Split('-')[0];
                 RowKey = value;
             }
         }
@@ -76,4 +83,11 @@ namespace NoSQLAPI.Controllers
 
         public Guid UniqueIdentifier { get; set; } = Guid.NewGuid();
     } 
+
+    public class StudentDto
+    {
+        public string RegistrationNumber { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+    }
 }
