@@ -34,7 +34,7 @@ namespace NoSQLAPI.Controllers
 
         public RedisController()
         {
-            _cache = cacheConnection.GetDatabase();
+            _cache = cacheConnection.GetDatabase(); 
         }
 
 
